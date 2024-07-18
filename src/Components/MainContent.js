@@ -202,7 +202,7 @@ const MainContent = ({ filterType }) => {
                         name="Status"
                         value={newTicket.Status}
                         onChange={handleAddChange}
-                        className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                        className="mt-1 block w-full border border-gray-300 rounded-md p-2" required
                     >
                         <option value="Open">Open</option>
                         <option value="Closed">Closed</option>
@@ -215,7 +215,7 @@ const MainContent = ({ filterType }) => {
                         name="QueryHandler"
                         value={newTicket.QueryHandler}
                         onChange={handleAddChange}
-                        className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                        className="mt-1 block w-full border border-gray-300 rounded-md p-2" required
                     >
                         <option value="">Handle Query by</option>
                         <option value="John Doe">John Doe</option>
@@ -295,7 +295,7 @@ const MainContent = ({ filterType }) => {
                                     name="Status"
                                     value={editedTicket.Status}
                                     onChange={handleEditChange}
-                                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                                    className="mt-1 block w-full border border-gray-300 rounded-md p-2" required
                                 >
                                     <option value="Open">Open</option>
                                     <option value="Closed">Closed</option>
@@ -308,7 +308,7 @@ const MainContent = ({ filterType }) => {
                         name="QueryHandler"
                         value={newTicket.QueryHandler}
                         onChange={handleAddChange}
-                        className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                        className="mt-1 block w-full border border-gray-300 rounded-md p-2" required
                         >
                         <option value="">Handle Query by</option>
                         <option value="John Doe">John Doe</option>

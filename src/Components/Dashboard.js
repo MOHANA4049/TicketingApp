@@ -3,7 +3,6 @@ import Sidebar from './Sidebar';
 import Navbar from './Navbar';
 import MainContent from './MainContent';
 import { useState } from 'react';
-import { fetchTickets } from '../features/ticketActions';
 const Dashboard = () => {
     const [filterType, setFilterType] = useState(null);
 
