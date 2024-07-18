@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { deleteTicket, fetchTickets, editTicket, addTicket } from '../features/ticketActions';
-import { FaTrash, FaEye, FaEdit, FaPlus } from 'react-icons/fa';
+import { FaTrash, FaEye, FaEdit, FaPlus,FaFlag } from 'react-icons/fa';
 
 const MainContent = ({ filterType }) => {
     const dispatch = useDispatch();
@@ -15,9 +15,13 @@ const MainContent = ({ filterType }) => {
         Username: '',
         Email: '',
         Description: '',
-        Status: '',
+        Status: 'Open',
         QueryHandler: '',
-    });    
+        Priority: 'Low'
+    });
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 9;
 
     useEffect(() => {
         dispatch(fetchTickets());
@@ -40,8 +44,9 @@ const MainContent = ({ filterType }) => {
             Username: '',
             Email: '',
             Description: '',
-            Status: '',
+            Status: 'Open',
             QueryHandler: '',
+            Priority: 'Low'
         });
     };
 
@@ -77,12 +82,8 @@ const MainContent = ({ filterType }) => {
             Description: '',
             Status: 'Open',
             QueryHandler: '',
+            Priority: 'Low'
         });
-    };
-
-    const renderDescription = (description) => {
-        const words = description.split(' ').slice(0, 3).join(' ');
-        return words + (description.length > words.length ? '...' : '');
     };
 
     const filteredData = tickets.filter(item => {
@@ -98,6 +99,20 @@ const MainContent = ({ filterType }) => {
 
         return matchesStatus && matchesSearch;
     });
+
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    const paginatedData = filteredData.slice(startIndex, endIndex);
+
+    const totalPages = Math.ceil(filteredData.length / itemsPerPage);
+
+    const handleNextPage = () => {
+        setCurrentPage(prev => Math.min(prev + 1, totalPages));
+    };
+
+    const handlePreviousPage = () => {
+        setCurrentPage(prev => Math.max(prev - 1, 1));
+    };
 
     return (
         <main className="ml-60 p-8">
@@ -117,156 +132,180 @@ const MainContent = ({ filterType }) => {
                 </button>
             </div>
 
-            
             {addMode && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white p-6 rounded-md shadow-lg w-full max-w-sm">
                         <h2 className="text-lg font-semibold mb-4">Add Ticket</h2>
                         <form onSubmit={handleAddSubmit} className="space-y-4">
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Username</label>
-                <input
-                    type="text"
-                    name="Username"
-                    placeholder="Username"
-                    value={newTicket.Username}
-                    onChange={handleAddChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                    required
-                />
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Username</label>
+                                <input
+                                    type="text"
+                                    name="Username"
+                                    placeholder="Username"
+                                    value={newTicket.Username}
+                                    onChange={handleAddChange}
+                                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Email</label>
+                                <input
+                                    type="email"
+                                    name="Email"
+                                    placeholder="Email"
+                                    value={newTicket.Email}
+                                    onChange={handleAddChange}
+                                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Description</label>
+                                <input
+                                    type="text"
+                                    name="Description"
+                                    placeholder="Description"
+                                    value={newTicket.Description}
+                                    onChange={handleAddChange}
+                                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Status</label>
+                                <select
+                                    name="Status"
+                                    value={newTicket.Status}
+                                    onChange={handleAddChange}
+                                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                                >
+                                    <option value="Open">Open</option>
+                                    <option value="Closed">Closed</option>
+                                    <option value="In Progress">In Progress</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Query Handler</label>
+                                <input
+                                    type="text"
+                                    name="QueryHandler"
+                                    placeholder="Query Handler"
+                                    value={newTicket.QueryHandler}
+                                    onChange={handleAddChange}
+                                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Priority</label>
+                                <select
+                                    name="Priority"
+                                    value={newTicket.Priority}
+                                    onChange={handleAddChange}
+                                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                                >
+                                    <option value="Low">Low</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="High">High</option>
+                                </select>
+                            </div>
+                            <div className="flex space-x-4">
+                                <button type="submit" className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600">Add Ticket</button>
+                                <button type="button" onClick={handleCloseDetails} className="bg-gray-500 text-white p-2 rounded-md hover:bg-gray-600">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Email</label>
-                    <input
-                        type="email"
-                        name="Email"
-                        placeholder="Email"
-                        value={newTicket.Email}
-                        onChange={handleAddChange}
-                        className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                        required
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Description</label>
-                    <input
-                        type="text"
-                        name="Description"
-                        placeholder="Description"
-                        value={newTicket.Description}
-                        onChange={handleAddChange}
-                        className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                        required
-                    />
-                </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Status</label>
-                    <select
-                    name="Status"
-                    value={newTicket.Status}
-                    onChange={handleAddChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                    >
-                    <option value="" disabled selected>Select Status</option>
-                    <option value="Open">Open</option>
-                    <option value="Closed">Closed</option>
-                    <option value="In Progress">In Progress</option>
-                    </select>
-                </div>
-                <div>
-                    <label className="block text-sm font-medium text-gray-700">Query Handler</label>
-                    <input
-                    type="text"
-                        name="QueryHandler"
-                        placeholder="Query Handler"
-                        value={newTicket.QueryHandler}
-                        onChange={handleAddChange}
-                        className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                        required
-                    />
-                </div>
-                <div className="flex space-x-4">
-                <button type="submit" className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600">Add Ticket</button>
-                <button type="button" onClick={handleCloseDetails} className="bg-gray-500 text-white p-2 rounded-md hover:bg-gray-600">Cancel</button>
-                </div>
-            </form>
-            </div>
-            </div>
             )}
+
             {editMode && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white p-6 rounded-md shadow-lg w-full max-w-sm">
                         <h2 className="text-lg font-semibold mb-4">Edit Ticket</h2>
                         <form onSubmit={handleEditSubmit} className="space-y-4">
-                    <div>
-                        <label className="block text-sm font-medium text-gray-700">Username</label>
-                        <input
-                            type="text"
-                            name="Username"
-                            value={editedTicket.Username}
-                            onChange={handleEditChange}
-                            placeholder="Username"
-                            className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                            required
-                        />
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Username</label>
+                                <input
+                                    type="text"
+                                    name="Username"
+                                    value={editedTicket.Username}
+                                    onChange={handleEditChange}
+                                    placeholder="Username"
+                                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Email</label>
+                                <input
+                                    type="email"
+                                    name="Email"
+                                    value={editedTicket.Email}
+                                    onChange={handleEditChange}
+                                    placeholder="Email"
+                                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Description</label>
+                                <input
+                                    type="text"
+                                    name="Description"
+                                    value={editedTicket.Description}
+                                    onChange={handleEditChange}
+                                    placeholder="Description"
+                                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Status</label>
+                                <select
+                                    name="Status"
+                                    value={editedTicket.Status}
+                                    onChange={handleEditChange}
+                                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                                >
+                                    <option value="Open">Open</option>
+                                    <option value="Closed">Closed</option>
+                                    <option value="In Progress">In Progress</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Query Handler</label>
+                                <input
+                                    type="text"
+                                    name="QueryHandler"
+                                    value={editedTicket.QueryHandler}
+                                    onChange={handleEditChange}
+                                    placeholder="Query Handler"
+                                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                                    required
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-sm font-medium text-gray-700">Priority</label>
+                                <select
+                                    name="Priority"
+                                    value={editedTicket.Priority}
+                                    onChange={handleEditChange}
+                                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                                >
+                                    <option value="Low">Low</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="High">High</option>
+                                </select>
+                            </div>
+                            <div className="flex space-x-4">
+                                <button type="submit" className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600">Save</button>
+                                <button type="button" onClick={handleCloseDetails} className="bg-gray-500 text-white p-2 rounded-md hover:bg-gray-600">Cancel</button>
+                            </div>
+                        </form>
                     </div>
-                    <div>
-                    <label className="block text-sm font-medium text-gray-700">Email</label>
-                    <input
-                        type="email"
-                        name="Email"
-                        value={editedTicket.Email}
-                        onChange={handleEditChange}
-                        placeholder="Email"
-                        className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                        required
-                    />
                 </div>
-                <div>
-                <label className="block text-sm font-medium text-gray-700">Description</label>
-                <input
-                    type="text"
-                    name="Description"
-                    value={editedTicket.Description}
-                    onChange={handleEditChange}
-                    placeholder="Description"
-                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                    required
-                />
-                </div>
-                <div>
-                <label className="block text-sm font-medium text-gray-700">Status</label>
-                <select
-                    name="Status"
-                    value={editedTicket.Status}
-                    onChange={handleEditChange}
-                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                >
-                <option value="Open">Open</option>
-                <option value="Closed">Closed</option>
-                <option value="In Progress">In Progress</option>
-                </select>
-                </div>
-                <div>
-                <label className="block text-sm font-medium text-gray-700">Query Handler</label>
-                <input
-                    type="text"
-                    name="QueryHandler"
-                    value={editedTicket.QueryHandler}
-                    onChange={handleEditChange}
-                    placeholder="Query Handler"
-                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
-                    required
-                />
-                </div>
-                <div className="flex space-x-4">
-                <button type="submit" className="bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600">Save</button>
-                <button type="button" onClick={handleCloseDetails} className="bg-gray-500 text-white p-2 rounded-md hover:bg-gray-600">Cancel</button>
-                </div>
-                </form>
-
-            </div>
-            </div>
             )}
 
             <div className="bg-white p-6 shadow-md rounded-lg overflow-auto">
@@ -276,19 +315,25 @@ const MainContent = ({ filterType }) => {
                             <th className="py-3 px-4 border-b border-gray-200 text-left text-sm font-medium text-gray-600">Username</th>
                             <th className="py-3 px-4 border-b border-gray-200 text-left text-sm font-medium text-gray-600">Email</th>
                             <th className="py-3 px-4 border-b border-gray-200 text-left text-sm font-medium text-gray-600">Description</th>
+                            <th className="py-3 px-4 border-b border-gray-200 text-left text-sm font-medium text-gray-600">Priority</th>
                             <th className="py-3 px-4 border-b border-gray-200 text-left text-sm font-medium text-gray-600">Status</th>
                             <th className="py-3 px-4 border-b border-gray-200 text-left text-sm font-medium text-gray-600">Query Handler</th>
                             <th className="py-3 px-4 border-b border-gray-200 text-left text-sm font-medium text-gray-600">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="bg-white divide-y divide-gray-200">
-                        {filteredData.map((item, index) => (
+                        {paginatedData.map((item, index) => (
                             <React.Fragment key={index}>
                                 <tr className="hover:bg-gray-200 transition duration-200">
                                     <td className="py-2 px-4 border-b border-gray-200">{item.Username}</td>
                                     <td className="py-2 px-4 border-b border-gray-200">{item.Email}</td>
+                                    <td className="py-2 px-4 border-b border-gray-200 overflow-hidden text-ellipsis whitespace-nowrap" style={{ maxWidth: '150px' }}>
+                                        {item.Description}
+                                    </td>
                                     <td className="py-2 px-4 border-b border-gray-200">
-                                        {selectedTicket === item ? item.Description : renderDescription(item.Description)}
+                                        {item.Priority === 'High' && <FaFlag color="red" title="High Priority" />}
+                                        {item.Priority === 'Medium' && <FaFlag color="yellow" title="Medium Priority" />}
+                                        {item.Priority === 'Low' && <FaFlag color="blue" title="Low Priority" />}
                                     </td>
                                     <td className="py-2 px-4 border-b border-gray-200">{item.Status}</td>
                                     <td className="py-2 px-4 border-b border-gray-200">{item.QueryHandler}</td>
@@ -309,13 +354,15 @@ const MainContent = ({ filterType }) => {
                                 </tr>
                                 {selectedTicket === item && (
                                     <tr>
-                                        <td colSpan="6" className="border-t border-gray-200 p-4">
+                                        <td colSpan="7" className="border-t border-gray-200 p-4">
                                             <h2 className="text-lg font-semibold mb-2">Ticket Details</h2>
                                             <div className="mb-2"><strong>Username:</strong> {item.Username}</div>
                                             <div className="mb-2"><strong>Email:</strong> {item.Email}</div>
                                             <div className="mb-2"><strong>Description:</strong> {item.Description}</div>
+                                            <div className="mb-2"><strong>Priority:</strong> {item.Priority}</div>
                                             <div className="mb-2"><strong>Status:</strong> {item.Status}</div>
                                             <div className="mb-2"><strong>Query Handler:</strong> {item.QueryHandler}</div>
+                                           
                                             <button className="text-gray-500 hover:text-gray-700" onClick={handleCloseDetails}>Close</button>
                                         </td>
                                     </tr>
@@ -324,9 +371,28 @@ const MainContent = ({ filterType }) => {
                         ))}
                     </tbody>
                 </table>
+
+                <div className="flex justify-between items-center mt-4">
+                    <button
+                        className="bg-gray-300 text-gray-700 p-2 rounded-md hover:bg-gray-400"
+                        onClick={handlePreviousPage}
+                        disabled={currentPage === 1}
+                    >
+                        Previous
+                    </button>
+                    <span>Page {currentPage} of {totalPages}</span>
+                    <button
+                        className="bg-gray-300 text-gray-700 p-2 rounded-md hover:bg-gray-400"
+                        onClick={handleNextPage}
+                        disabled={currentPage === totalPages}
+                    >
+                        Next
+                    </button>
+                </div>
             </div>
         </main>
     );
 };
 
 export default MainContent;
+

@@ -11,10 +11,6 @@ const Dashboard = () => {
         setFilterType(type);
     };
 
-    useEffect(()=>{
-        fetchTickets();
-    });
-
     return (
         <>
             <Sidebar handleFilter={handleFilter} />

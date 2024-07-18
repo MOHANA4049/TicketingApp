@@ -14,11 +14,35 @@
 // }
 // export default App;
 
+// import React from 'react';
+// import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+// import { UserProvider } from '../src/context/userContext';
+// import LoginForm from './Components/Login';
+// import Dashboard from './Components/Dashboard';
+
+// function App() {
+//   return (
+//     <UserProvider>
+//       <Router>
+//         <div>
+//           <Routes>
+//             <Route path="/" element={<LoginForm />} />
+//             <Route path="/dashboard" element={<Dashboard />} />
+//           </Routes>
+//         </div>
+//       </Router>
+//     </UserProvider>
+//   );
+// }
+
+// export default App;
+
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import { UserProvider } from '../src/context/userContext';
 import LoginForm from './Components/Login';
 import Dashboard from './Components/Dashboard';
+import ProtectedRoute from './Components/protectedRoute';
 
 function App() {
   return (
@@ -27,7 +51,7 @@ function App() {
         <div>
           <Routes>
             <Route path="/" element={<LoginForm />} />
-            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/dashboard" element={<ProtectedRoute element={Dashboard}/>} />
           </Routes>
         </div>
       </Router>
@@ -36,4 +60,5 @@ function App() {
 }
 
 export default App;
+
 

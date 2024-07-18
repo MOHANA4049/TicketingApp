@@ -35,8 +35,10 @@ const LoginForm = () => {
 
     if (!values.password) {
       errors.password = 'Required';
+    } else if (!/^(?=.*\d)(?=.*[a-zA-Z]).{8,}$/.test(values.password)) {
+      errors.password =
+        'Password must be at least 8 characters long and include at least one letter and one digit.';
     }
-
     return errors;
   };
 
