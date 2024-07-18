@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { deleteTicket, fetchTickets, editTicket, addTicket } from '../features/ticketActions';
 import { FaTrash, FaEye, FaEdit, FaPlus,FaFlag ,FaWhatsapp,FaTelegram} from 'react-icons/fa';
 import { TfiEmail } from 'react-icons/tfi';
+import { FiSearch } from 'react-icons/fi';
 import { CgWebsite } from "react-icons/cg";
 
 const MainContent = ({ filterType }) => {
@@ -217,7 +218,7 @@ const MainContent = ({ filterType }) => {
                         onChange={handleAddChange}
                         className="mt-1 block w-full border border-gray-300 rounded-md p-2" required
                     >
-                        <option value="">Handle Query by</option>
+                        <option value="">Select Query Handler</option>
                         <option value="John Doe">John Doe</option>
                         <option value="Jane">Jane</option>
                         <option value="Bob">Bob</option>
@@ -232,7 +233,7 @@ const MainContent = ({ filterType }) => {
                         name="Priority"
                         value={newTicket.Priority}
                         onChange={handleAddChange}
-                        className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                        className="mt-1 block w-full border border-gray-300 rounded-md p-2" required
                     >
                         <option value="Low">Low</option>
                         <option value="Medium">Medium</option>
@@ -303,29 +304,24 @@ const MainContent = ({ filterType }) => {
                                 </select>
                             </div>
                             <div>
-                            <label className="block text-sm font-medium text-gray-700">Query Handler</label>
-                            <select
-                        name="QueryHandler"
-                        value={newTicket.QueryHandler}
-                        onChange={handleEditChange}
-                        className="mt-1 block w-full border border-gray-300 rounded-md p-2" required
-                        >
-                        <option value="">Handle Query by</option>
-                        <option value="John Doe">John Doe</option>
-                        <option value="Jane">Jane</option>
-                        <option value="Bob">Bob</option>
-                        <option value="Alice">Alice</option>
-                        <option value="Charlie">Charlie</option>
-                        <option value="Eva">Eva</option>
-                        </select>
-                        </div>
+                                <label className="block text-sm font-medium text-gray-700">Query Handler</label>
+                                <input
+                                    type="text"
+                                    name="QueryHandler"
+                                    value={editedTicket.QueryHandler}
+                                    onChange={handleEditChange}
+                                    placeholder="Query Handler"
+                                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                                    required
+                                />
+                            </div>
                             <div>
                                 <label className="block text-sm font-medium text-gray-700">Priority</label>
                                 <select
                                     name="Priority"
                                     value={editedTicket.Priority}
                                     onChange={handleEditChange}
-                                    className="mt-1 block w-full border border-gray-300 rounded-md p-2"
+                                    className="mt-1 block w-full border border-gray-300 rounded-md p-2" required
                                 >
                                     <option value="Low">Low</option>
                                     <option value="Medium">Medium</option>
