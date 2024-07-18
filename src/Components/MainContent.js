@@ -307,7 +307,7 @@ const MainContent = ({ filterType }) => {
                             <select
                         name="QueryHandler"
                         value={newTicket.QueryHandler}
-                        onChange={handleAddChange}
+                        onChange={handleEditChange}
                         className="mt-1 block w-full border border-gray-300 rounded-md p-2" required
                         >
                         <option value="">Handle Query by</option>
