@@ -1,4 +1,4 @@
-
+import axios from "axios";
 export const FETCH_TICKETS = 'FETCH_TICKETS';
 export const FETCH_TICKETS_SUCCESS = 'FETCH_TICKETS_SUCCESS';
 export const FETCH_TICKETS_FAILURE = 'FETCH_TICKETS_FAILURE';
@@ -8,8 +8,8 @@ export const fetchTickets = () => {
     return async (dispatch) => {
         dispatch({ type: FETCH_TICKETS });
         try {
-            const response = await fetch('/data.json');
-            const data = await response.json();
+            const response = await axios.get('/data.json');
+            const data = response.data;
             dispatch({ type: FETCH_TICKETS_SUCCESS, payload: data });
         } catch (error) {
             dispatch({ type: FETCH_TICKETS_FAILURE, payload: error.message });

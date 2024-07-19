@@ -3,7 +3,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { deleteTicket, fetchTickets, editTicket, addTicket } from '../features/ticketActions';
 import { FaTrash, FaEye, FaEdit, FaPlus,FaFlag ,FaWhatsapp,FaTelegram} from 'react-icons/fa';
 import { TfiEmail } from 'react-icons/tfi';
-import { FiSearch } from 'react-icons/fi';
 import { CgWebsite } from "react-icons/cg";
 
 const MainContent = ({ filterType }) => {
